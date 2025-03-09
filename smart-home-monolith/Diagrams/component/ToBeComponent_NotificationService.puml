@@ -1,0 +1,24 @@
+@startuml
+title Умный дом NotificationService Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(IoTSystem, "Система умного дома") {
+  Container(NotificationService, "Внутренний сервис уведомлений", "Node.js", "Отправка увведомлений пользователям")
+  Container(WebApp, "Web Application", "Java, Spring", "Позволяет управлять умным домом через браузер")
+  Container(MobileApp, "Mobile Application", "Kotlin, Swift", "Позволяет управлять умным домом через приложение")
+  
+}
+
+Container(NotificationService, "Внутренний сервис уведомлений", "Node.js") {
+  Component(NotificationEngine, "Обработка событий умного дома", "Подготовка текста и способа нотификации пользователя")
+  Component(NotificationHistory, "Хранение истории нотификаций", "Ведение истории нотификаций по пользователям и устройствам")
+}
+
+Rel(NotificationEngine,NotificationHistory,"Чтение/запись данных")
+Rel(NotificationEngine,WebApp,"Передача нотификаций")
+Rel(NotificationEngine,MobileApp,"Передача нотификаций")
+
+@enduml
