@@ -1,0 +1,23 @@
+@startuml
+title Умный дом Data Processing Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(IoTSystem, "Система умного дома") {
+  Container(DataProcessing, "Обработчик данных", "Node.js", "Обработка данных с датчиков устройств")
+  Container(Analytics, "Аналитический модуль", "Python", "Аналитика по устройствам умного дома")
+  Container(Database, "Database", "PostgreSQL", "Хранит данные пользователей и устройств")
+}
+
+Container(DataProcessing, "Обработчик данных", "Node.js") {
+  Component(RawDataProcessing, "Обработчик сырых данных", "Подготовка данных для использования другими модулями системы")
+  Component(RepositoryLayer, "Repository Layer", "логика доступа к данным")
+}
+
+Rel(RawDataProcessing,RepositoryLayer,"Чтение/запись данных")
+Rel(RepositoryLayer,Database,"Запись подготовленной информации с устройств")
+Rel(RepositoryLayer,Analytics,"Передача данных в аналитический модуль")
+
+@enduml

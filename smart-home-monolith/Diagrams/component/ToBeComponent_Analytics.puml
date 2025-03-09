@@ -1,0 +1,28 @@
+@startuml
+title Умный дом Analytics Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(IoTSystem, "Система умного дома") {
+  Container(Analytics, "Аналитика данных", "Python", "Обработка данных с датчиков устройств")
+  Container(DataProcessing, "Обработчик данных", "Node.js", "Обработка данных с датчиков устройств")
+  Container(WebApp, "Web Application", "Java, Spring", "Позволяет управлять умным домом через браузер")
+  Container(MobileApp, "Mobile Application", "Kotlin, Swift", "Позволяет управлять умным домом через приложение")
+}
+
+Container(Analytics, "Аналитика данных", "Python") {
+  Component(OLAP, "Olap-кубы", "Формирование аналитических разрезов по умному дому по запросу пользователя")
+  Component(Monitoring, "Данные мониторинга", "Информация по статусу состояния устройств")
+}
+
+Rel(OLAP,WebApp,"Передача аналитики")
+Rel(OLAP,MobileApp,"Передача аналитики")
+Rel(Monitoring,WebApp,"Передача статуса состояния устройств")
+Rel(Monitoring,MobileApp,"Передача статуса состояния устройств")
+
+Rel_D(DataProcessing,Analytics,"Передача данных в аналитический модуль")
+
+
+@enduml

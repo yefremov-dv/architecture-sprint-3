@@ -6,14 +6,14 @@ top to bottom direction
 !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
 
 Person(user, "Пользователь", "Включает и выключает устройства, настраивает температурный режим")
-Person(admin, "Администратор", "An administrator managing the system")
-Person(Specialist, "Выездной Специалист ", "An administrator managing the system")
-System(HeatingSystem, "HeatingSystem", "System managing memberships, schedules, and payments")
+Person(admin, "Администратор", "управление пользователями, удаленная настройка устройств")
+Person(Specialist, "Выездной Специалист ", "Устанавливает и настраивает устройства на локации пользователя")
+System(HeatingSystem, "HeatingSystem", "Система управляет температурой в домах")
 
 System_Ext(IotApi, "Устройства управления температурой", "Сбор информации с датчиков устройств")
 
 Rel(user, HeatingSystem, "Пользуется системой")
-Rel(admin,HeatingSystem,"Администрирует систему")
+Rel(admin,HeatingSystem,"Администрирует систему, проводит удаленную настройку устройств")
 Rel(Specialist, HeatingSystem, "Производит первичную настройку устройств")
 Rel(HeatingSystem,IotApi,"Управление устройствами")
 

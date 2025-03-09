@@ -1,0 +1,56 @@
+@startuml
+title Умный дом To Be Container Diagram
+
+top to bottom direction
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "Пользователь", "Включает и выключает устройства, настраивает температурный режим")
+Person(admin, "Администратор", "управление пользователями, удаленная настройка устройств")
+Person(Specialist, "Выездной Специалист ", "Устанавливает и настраивает устройства на локации пользователя")
+System(IoTSystem, "Система умного дома", "Система управляет устройствами в домах")
+
+System_Boundary(IoTSystem, "Система умного дома") {
+  Container(WebApp, "Web Application", "Java, Spring", "Позволяет управлять умным домом через браузер")
+  Container(MobileApp, "Mobile Application", "Kotlin, Swift", "Позволяет управлять умным домом через приложение")
+  Container(DataProcessing, "Обработчик данных", "Node.js", "Обработка данных с датчиков устройств")
+  Container(Analytics, "Аналитика данных", "Python", "Обработка данных с датчиков устройств")
+  Container(NotificationService, "Внутренний сервис уведомлений", "Node.js", "Отправка увведомлений пользователям")
+  ContainerQueue(ESB, "Интеграционная шина", "Kafka", "обмен информацией между микросервисами")
+  Container(APIGateway, "APIGateway", "Kong", "Обмен между внутренними и внешними сервисами")
+  ContainerDb(Database, "Database", "PostgreSQL", "Хранит данные пользователей и устройств")
+}
+
+System_Ext(IotApi, "Устройства умного дома", "Сбор информации с датчиков устройств")
+System_Ext(NotificationCenter, "E-mail система", "Отправка увведомлений пользователям по электронной почте")
+
+Rel(user, WebApp, "Показывает список устройств и их статус. Отправляет команды устройствам")
+Rel(user, MobileApp, "Показывает список устройств и их статус. Отправляет команды устройствам")
+Rel(admin, WebApp,"Управляет пользователями")
+Rel(Specialist, IotApi, "Производит первичную настройку устройств")
+Rel(Specialist, WebApp,"Производит первичную настройку устройств")
+
+Rel(APIGateway, NotificationCenter, "Запрос на уведомление пользователя по e-mail")
+Rel(APIGateway, IotApi, "Команды для устройств умного дома")
+Rel(IotApi, ESB, "Данные устройств")
+Rel(ESB, DataProcessing, "Сырые данные устройств")
+Rel(DataProcessing, Analytics , "Данные для аналитики и мониторинга")
+Rel(Analytics, WebApp, "Аналитика и мониторинг")
+Rel(Analytics, MobileApp, "Аналитика и мониторинг")
+Rel_D(ESB, WebApp, "Информация об устройствах")
+Rel_D(ESB, MobileApp, "Информация об устройствах")
+Rel_D(ESB, APIGateway, "Данные для отправки по e-mail")
+Rel_D(ESB, NotificationService, "Данные для уведолений")
+
+Rel(NotificationService, WebApp, "Уведомления пользователей")
+Rel(NotificationService, MobileApp, "Уведомления пользователей")
+Rel(NotificationCenter, user, "Отправляет уведомление по e-mail")
+Rel(NotificationCenter, admin, "Отправляет уведомление по e-mail")
+
+BiRel(WebApp, Database, "Чтение и запись информации о пользователях и устройствах")
+BiRel(MobileApp, Database, "Чтение и запись информации о пользователях и устройствах")
+Rel(DataProcessing, Database, "Обработанные данные устройств")
+
+
+
+@enduml
